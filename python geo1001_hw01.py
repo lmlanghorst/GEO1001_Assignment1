@@ -7,6 +7,7 @@ import numpy as np
 from statistics import mean
 from scipy import stats
 import matplotlib.pyplot as plt
+import sys
 
 aaa = list(range(4,5))
 Heat_A = pd.read_excel (r'C:\Users\neder\Documents\Geomatics\1001\Assignment 1\hw01\HEAT - A_final.xls', header=3,skiprows=[4,2479,2480])    #import excel file
@@ -69,7 +70,9 @@ print(Heat_E.var(axis = 0, numeric_only=True))
 
 print("Heat E standard deviation")
 print(Heat_E.std(axis = 0, numeric_only=True))
-
+all_means = [(Heat_A.mean(axis = 0, numeric_only=True)), (Heat_B.mean(axis = 0, numeric_only=True)), (Heat_C.mean(axis = 0, numeric_only=True)), (Heat_D.mean(axis = 0, numeric_only=True)), (Heat_E.mean(axis = 0, numeric_only=True))]
+all_variance= [(Heat_A.var(axis = 0, numeric_only=True)), (Heat_B.var(axis = 0, numeric_only=True)), (Heat_C.var(axis = 0, numeric_only=True)), (Heat_D.var(axis = 0, numeric_only=True)), (Heat_E.var(axis = 0, numeric_only=True))]
+all_std= [(Heat_A.std(axis = 0, numeric_only=True)), (Heat_B.std(axis = 0, numeric_only=True)), (Heat_C.std(axis = 0, numeric_only=True)), (Heat_D.std(axis = 0, numeric_only=True)), (Heat_E.std(axis = 0, numeric_only=True))]
 # =============================================================================
 # PLOTS
 # =============================================================================
@@ -175,22 +178,27 @@ PMFd = Temp[3].value_counts().sort_index() / len(Temp[3])
 PMFe = Temp[4].value_counts().sort_index() / len(Temp[4])
 PMF = [PMFa, PMFb, PMFc, PMFd, PMFe]
                                                             #database plot
-fig = plt.figure()
-ax = plt.axes()
-plt.title('pmf')
-plt.xlabel('Temperature [Celcius]')
-plt.ylabel('probability')
-plt.hist(Temp, bins=30, normed=True, rwidth=0.85)
 
 def pmf(sample):                                    
- 	c = sample.value_counts()
- 	p = c/len(sample)
- 	return p
+    c = sample.value_counts()
+    p = c/len(sample)
+    return p                                
+df44 = pmf(Heat_A['Temperature'])       
+df444 = df44.to_frame()
+df444.reset_index(inplace=True)
+df444.columns = ['T', 'PMF']
+df444 = df444.astype(float)
+c = df444.sort_values(by=['T'])
+fig = plt.figure(figsize=(16,6))
+ax4 = fig.add_subplot(111)
+ax4.bar(x=c['T'], height=c['PMF'], width=0.00005, edgecolor='k')
+plt.show()
+
 pmfl = pmf(Temp[0])
 pmflsort = pmfl.sort_index()
 fig = plt.figure(figsize=(17,6))
 ax1 = fig.add_subplot(111)
-ax1.bar(pmflsort.index,pmflsort,rwidth=0.6)
+ax1.bar(pmflsort.index,pmflsort, edgecolor='k')
 ax1.set_title('pmf a')
 plt.xlabel('Temperature [Celcius]')
 plt.ylabel('probability')
@@ -200,7 +208,7 @@ pmflb = pmf(Temp[1])
 pmflbsort = pmflb.sort_index()
 fig = plt.figure(figsize=(17,6))
 ax1 = fig.add_subplot(111)
-ax1.bar(pmflbsort.index,pmflbsort)
+ax1.bar(pmflbsort.index,pmflbsort, edgecolor='k')
 ax1.set_title('pmf b')
 plt.xlabel('Temperature [Celcius]')
 plt.ylabel('probability')
@@ -210,7 +218,7 @@ pmflc = pmf(Temp[2])
 pmflcsort = pmflc.sort_index()
 fig = plt.figure(figsize=(17,6))
 ax1 = fig.add_subplot(111)
-ax1.bar(pmflcsort.index,pmflcsort)
+ax1.bar(pmflcsort.index,pmflcsort, edgecolor='k')
 ax1.set_title('pmf c')
 plt.xlabel('Temperature [Celcius]')
 plt.ylabel('probability')
@@ -220,7 +228,7 @@ pmfld = pmf(Temp[3])
 pmfldsort = pmfld.sort_index()
 fig = plt.figure(figsize=(17,6))
 ax1 = fig.add_subplot(111)
-ax1.bar(pmfldsort.index,pmfldsort)
+ax1.bar(pmfldsort.index,pmfldsort, edgecolor='k')
 ax1.set_title('pmf d')
 plt.xlabel('Temperature [Celcius]')
 plt.ylabel('probability')
@@ -230,7 +238,7 @@ pmfle = pmf(Temp[4])
 pmflesort = pmfle.sort_index()
 fig = plt.figure(figsize=(17,6))
 ax1 = fig.add_subplot(111)
-ax1.bar(pmflesort.index,pmflesort)
+ax1.bar(pmflesort.index,pmflesort, edgecolor='k')
 ax1.set_title('pmf e')
 plt.xlabel('Temperature [Celcius]')
 plt.ylabel('probability')
@@ -567,13 +575,20 @@ t, p = stats.ttest_ind(Windspeed[1],Windspeed[0])
 print("Windspeed A-B p = " + str(p))
 
 
+# =============================================================================
+# BONUS QUESTION
+# =============================================================================
 
-
-
-
-
-
-
+Ahot = (i for i, n in enumerate(Temp[0]) if n >= 31) 
+print('sensor A',  list(Ahot))
+Bhot = (i for i, n in enumerate(Temp[0]) if n >= 30) 
+print('sensor A',  list(Bhot))
+Chot = (i for i, n in enumerate(Temp[0]) if n >= 30) 
+print('sensor A',  list(Chot))
+Dhot = (i for i, n in enumerate(Temp[0]) if n >= 30) 
+print('sensor A',  list(Dhot))
+Ehot = (i for i, n in enumerate(Temp[0]) if n >= 30) 
+print('sensor A',  list(Ehot))
 
 
 
